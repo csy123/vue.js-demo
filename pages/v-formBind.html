@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>vue 表单输入绑定</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link href="" rel="stylesheet">
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+    <!-- 复选框 -->
+    <h2>checkbox</h2>
+    <div id='app'>
+        <!-- 多个勾选框，绑定到同一个数组： -->
+        <input type="checkbox" id="john" value="john" v-model="checkedNames">
+        <label for="john">john</label>
+        <input type="checkbox" id="mike" value="mike" v-model="checkedNames">
+        <label for="mike">mike</label>
+        <input type="checkbox" id="james" value="james" v-model="checkedNames">
+        <label for="james">james</label>
+        <br>
+        <span>checked Names: {{checkedNames}}</span>
+    </div>
+    <hr>
+    <!-- 单选框 -->
+    <h2>radio</h2>
+    <div id='app1'>
+        <input type="radio" id="one" value="one" v-model="radioTest">
+        <label for="one">john</label>
+        <br>
+        <input type="radio" id="two" value="two" v-model="radioTest">
+        <label for="two">james</label>
+        <br>
+        <span>radioTest: {{radioTest}}</span>
+    </div>
+    <hr>
+    <!-- 选择列表 -->
+    <h2>select</h2>
+    <div id='app2'>
+        <select v-model='selected'>
+            <option value="" disabled>请选择</option>
+            <option>J</option>
+            <option>L</option>
+            <option>K</option>
+        </select>
+        <span>selected: {{selected}}</span>
+    </div>
+    <hr>
+    <!-- 选择列表 多选列表 (绑定到一个数组)：-->
+    <h2>select multi</h2>
+    <div id='app3'>
+        <select v-model='selected' multiple>
+            <option value="" disabled>请选择</option>
+            <option>J</option>
+            <option>L</option>
+            <option>K</option>
+        </select>
+        <span>selected: {{selected}}</span>
+    </div>
+    <hr>
+    <!-- 选择列表 动态选项用 v-for-->
+    
+    <div id='app4'>
+        <select v-model='selected'>
+            <option v-for='option in options' v-bind:value="option.value">
+                {{option.text}}
+            </option>
+        </select>
+        <span>selected: {{selected}}</span>
+    </div>
+    <hr>
+    <!-- 修饰符lazy  -->
+    <h2>修饰符</h2>
+    <div id='app5'>
+        <!-- 在chage事件更新，而非input事件更新 -->
+        <input type="text" v-model.lazy='inputText' placeholder="lazy请输入...">
+        <span>inputText: {{inputText}}</span>
+        <!-- number 修饰符 转为number-->
+        <input type="number" v-model.number="inputText" placeholder="number">
+        <!-- trim 修饰符 过滤空格-->
+        <input type="text" v-model.trim="inputText" placeholder="trim">
+    </div>
+    <hr>
+</body>
+<script type="text/javascript">
+    var app = new Vue({
+        el:"#app",
+        data:{
+            checkedNames:[]
+        }
+    });
+    var app1 = new Vue({
+        el:"#app1",
+        data:{
+            radioTest:''
+        }
+    });
+
+    var app2 = new Vue({
+        el:"#app2",
+        data:{
+            selected:''
+        }
+    });
+    var app3 = new Vue({
+        el:"#app3",
+        data:{
+            selected:[]
+        }
+    });
+    var app4 = new Vue({
+        el:"#app4",
+        data:{
+            selected:'A',
+            options:[{text:"one",value:"A"},{text:"two",value:"B"},{text:"three",value:"C"}]
+        }
+    });
+    var app5 = new Vue({
+        el:"#app5",
+        data:{
+            inputText:''
+        }
+    });
+
+</script>
+
+</html>

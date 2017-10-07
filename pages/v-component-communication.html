@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>vue 组合组件</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link href="" rel="stylesheet">
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+    <!-- 使用Props传递数据 -->
+    <h2>使用Props传递数据</h2>
+    <div id='app'>
+
+        <child  message='hello vue.js'></child><!-- 字面量语法 -->
+        <child v-bind:message='hello'></child><!-- 动态语法 -->
+    </div>
+    <hr>
+    <h2>动态 Props传递数据</h2>
+    <div id='app1'>
+        <input type="text" v-model="parentMessage">
+        <child-1 v-bind:my-message='parentMessage'></child-1>
+    </div>
+    <hr>
+    <h2>Props传递数据多个属性(对象)</h2>
+    <div id='app2'>
+        <child-2 v-bind='todo'></child-2>
+    </div>
+    <hr>
+     <h2>自定义事件</h2>
+    <div id='app3'>
+        <p>{{ total }}</p>
+        <button-counter v-on:increment="incrementToTotal"></button-counter>
+        <button-counter v-on:increment="incrementToTotal"></button-counter>
+    </div>
+    <hr>
+
+</body>
+<script type="text/javascript">
+Vue.component('child', {
+    // 声明 props
+    props: ['message'],
+    // 就像 data 一样，prop 可以用在模板内
+    // 同样也可以在 vm 实例中像“this.message”这样使用
+    template: '<p>{{ message }}</p>'
+})
+var app = new Vue({
+    el:"#app",
+    data:{
+        hello:"hello china!"
+    }
+});
+
+Vue.component('child-1',{
+    props:{myMessage:Number},
+    template:'<p>message form parent:{{myMessage}}</p>'
+});
+var app1 = new Vue({
+    el:"#app1",
+    data:{
+        parentMessage:''
+    }
+});
+
+Vue.component('child-2',{
+    props:["text","isComplete"],
+    template:'<p>todo:{{text}}-{{isComplete}}</p>'
+});
+var app2 = new Vue({
+    el:"#app2",
+    data:{
+        todo:{
+            text:"learn vue.js",
+            isComplete:false
+        }
+    }
+});
+
+//先注册组件
+Vue.component("button-counter",{
+    template:"<button v-on:click='counterNumber'>{{counter}}</button>",
+    data:function(){
+        return {
+            counter:0
+        }
+    },
+    methods:{
+        counterNumber:function(){
+            this.counter += 1;
+            this.$emit('increment');
+        }
+    }
+});
+var app3 = new Vue({
+    el:"#app3",
+    data:{
+        total:0
+    },
+    methods:{
+        incrementToTotal:function(){
+            this.total +=1
+        }
+    }
+});
+</script>
+
+</html>

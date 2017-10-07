@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>计算属性</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link href="" rel="stylesheet">
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1>计算属性</h1>
+        <p>{{message}}</p>
+        <p>{{reverseMessage}}</p>
+    </div>
+    <hr>
+    <div id="app2">
+        <h1>方法</h1>
+        <p>{{message}}</p>
+        <p>{{reverseMessage()}}</p>
+    </div>
+    <hr>
+    <h1>被观察的属性</h1>
+    <div id="app3">{{fullName}}</div>
+    <hr>
+    <h1>计算属性的setter</h1>
+    <div id="app4">
+        <span>firstName:{{firstName}}</span>
+        <br>
+        <span>lastName:{{lastName}}</span>
+        <br>
+        <span>{{fullName}}</span>
+    </div>
+    <h1>观察者</h1>
+    <div id="app5">
+        <p>Ask u yes/no question:
+            <input type="text" name="watcher" v-model="question">
+        </p>
+        <p>{{answer}}</p>
+    </div>
+</body>
+<script type="text/javascript">
+// 计算属性 钩子函数中执行computed
+var app = new Vue({
+    el: "#app",
+    data: {
+        message: "hello chenshiyu!"
+    },
+    //计算属性会缓存，只有在他相关依赖发生改变时，才会求值
+    computed: {
+        reverseMessage: function() {
+            return this.message.split("").reverse().join("");
+        }
+    }
+});
+
+var app2 = new Vue({
+    el: "#app2",
+    data: {
+        message: "hello world!"
+    },
+    methods: {
+        reverseMessage: function() {
+            return this.message.split('').reverse().join('');
+        }
+    }
+});
+
+var app3 = new Vue({
+    el: "#app3",
+    data: {
+        firstName: 'chen',
+        lastName: 'shiyu',
+        fullName: "chen shiyu"
+    },
+    watch: {
+        firstName: function(val) {
+            this.fullName = val + this.lastName;
+        },
+        lastName: function(val) {
+            this.fullName = this.firstName + val;
+        }
+    }
+});
+
+var app4 = new Vue({
+    el: "#app4",
+    data: {
+        firstName: "zhang",
+        lastName: "san"
+    },
+    computed: {
+        fullName: {
+            get: function() {
+                return this.firstName + this.lastName;
+            },
+            set: function(newName) {
+                var namesArray = newName.split(' ');
+                this.firstName = namesArray[0];
+                this.lastName = namesArray[namesArray.length - 1]
+            }
+        }
+
+    }
+});
+
+var app5 = new Vue({
+    el: "#app5",
+    data: {
+        question: '',
+        answer: "i cannot give u an answer until u  ask a question!"
+    },
+    watch: {
+        question: function(newQuestion) {
+            this.answer = "waiting for u yo stop typing...";
+            this.getAnswer();
+        }
+    },
+    methods: {
+        getAnswer: _.debounce(
+            function() {
+                if (this.question.indexOf('?') === -1) {
+                    this.answer = 'Questions usually contain a question mark. ;-)'
+                    return
+                }
+                this.answer = 'Thinking...'
+                var vm = this
+                axios.get('https://yesno.wtf/api')
+                    .then(function(response) {
+                        vm.answer = _.capitalize(response.data.answer)
+                    })
+                    .catch(function(error) {
+                        vm.answer = 'Error! Could not reach the API. ' + error
+                    })
+            },
+            500
+        )
+    }
+});
+</script>
+
+</html>

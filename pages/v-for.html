@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>v-for指令</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link href="" rel="stylesheet">
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+    <h2>v-for 把一个数组对应为一个数组</h2>
+    <div id="app1">
+        <ul>
+            <li v-for='(item,index) of items'>
+                <!--in 可以由 of 代替 -->
+                {{item.label}}-{{index}}-{{item.todo}}
+            </li>
+        </ul>
+    </div>
+    <hr>
+    <h2>v-for 一个对象</h2>
+    <div id="app2">
+        <ul>
+            <li v-for="(value,key) in person">
+                {{key}}:{{value}}
+            </li>
+        </ul>
+    </div>
+    <hr>
+    <h2>v-for 数组过滤/排序</h2>
+    <div id="app3">
+        <ul>
+            <li v-for="n in filteredNumbers">
+                {{n}}
+            </li>
+        </ul>
+    </div>
+    <hr>
+    <h2>v-for 一段取值范围</h2>
+    <div>
+        <span v-for="n in 10">{{ n }} </span>
+    </div>
+    <hr>
+    <h2>一个组件的 v-for</h2>
+    <div id="todo-list">
+    	<input type="text" v-model="newtodoText" @keyup.enter="addNewTodo">
+        <ul>
+            <li is='todo-item' v-for="(todo, index) in todos" :title="todo.title" :index="index" :key="todo.id" @remove="todos.splice(index, 1)"></li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript">
+var app1 = new Vue({
+    el: "#app1",
+    data: {
+        parentMesaaage: "哈哈！您愁大了！",
+        items: [
+            { label: "吃早餐", todo: "已经吃了" },
+            { label: "上班", todo: "进行中..." },
+            { label: "吃中饭", todo: "right now" }
+        ]
+    }
+
+});
+
+var app2 = new Vue({
+    el: "#app2",
+    data: {
+        person: {
+            firstName: "陈",
+            lastName: "石玉",
+            age: "年方30"
+        }
+    }
+});
+
+var app3 = new Vue({
+    el: "#app3",
+    data: {
+        numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    computed: {
+        filteredNumbers: function() {
+            return this.numbers.filter(function(number) {
+                return number % 2 === 0;
+            })
+        }
+    }
+});
+Vue.component("todo-item", {
+    template: '\<li>\{{ title }}\<button v-on:click="$emit(\'remove\')">X</button>\</li>\
+  ',
+   props: ['title']
+});
+var app4 = new Vue({
+	el:"#todo-list",
+	data:{
+		newtodoText:"",
+		todos:[{id:0,title:"coding"},{id:1,title:"walking"},{id:2,title:'rading'}],
+		nextTodoId:3
+	},
+	methods:{
+		addNewTodo:function(){
+			this.todos.push({id:this.nextTodoId++,title:this.newtodoText});
+			this.newtodoText = '';
+		},
+	}
+});
+</script>
+
+</html>

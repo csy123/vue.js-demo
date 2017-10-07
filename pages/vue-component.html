@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>vue component</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link href="" rel="stylesheet">
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+    <div id="app">
+        <ol>
+            <todo-item v-for="item in properties" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+        </ol>
+    </div>
+
+    <hr>
+    <!-- 局部注册组件（只供当前父实例使用） -->
+    <div id="app1">
+        <hello></hello>
+    </div>
+    <hr>
+    <!-- 组件里data必须是函数-->
+    <h2>组件里data必须是函数</h2>
+    <div id="app2">
+        <simple-counter></simple-counter>
+        <simple-counter></simple-counter>
+        <simple-counter></simple-counter>
+    </div>
+    <div id="app3">
+        <counter></counter>
+        <counter></counter>
+        <counter></counter>
+    </div>
+</body>
+<script type="text/javascript">
+// 定义名为 todo-item 的新组件(全局注册)
+Vue.component('todo-item', {
+    props: ["todo"],
+    template:'<li>{{todo.text}}</li>'
+});
+var app = new Vue({
+	el:"#app",
+	data:{
+		properties:[
+			{id:0,text:"西红柿"},
+			{id:1,text:"菠菜"},
+			{id:2,text:"西蓝花"}
+		]
+	}
+});
+//1、先注册组件
+//2、实例化父实例
+var hello = {
+    template:"<h2>hello vue.js!</h2>"
+};
+var app1 = new Vue({
+    el:"#app1",
+    components:{
+        "hello":hello
+    }
+});
+var data = {counter:0}
+Vue.component("simple-counter",{
+    data:function(){
+        return data;
+    },
+    template:"<button v-on:click='counter += 1'>{{counter}}</button>"
+})
+
+var app2 = new Vue({
+    el:"#app2"
+});
+Vue.component("counter",{
+    data:function(){
+        return {
+            counter:0
+        }
+    },
+    template:"<button v-on:click='counter += 1'>{{counter}}</button>"
+});
+var app3 = new Vue({
+    el:"#app3"
+});
+</script>
+</html>

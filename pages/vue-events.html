@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>vue events</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link href="" rel="stylesheet">
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+    <h2>监听事件</h2>
+    <div id="app">
+        <button v-on:click="counter += 1">add one</button>
+        <p>这个按钮被点击了{{counter}}次</p>
+    </div>
+    <hr>
+    <h2>方法事件处理器</h2>
+    <div id="app1">
+        <button v-on:click="sayHello">say Hello</button>
+    </div>
+    <hr>
+    <h2>内联处理器里的方法</h2>
+    <div id="app2">
+        <button v-on:click="say('Hi')">say Hi</button>
+        <button v-on:click="say('nothing')">say nothing</button>
+        <button v-on:click="warn('nothing',$event)">warn</button>
+    </div>
+    <hr>
+</body>
+<script type="text/javascript">
+var app = new Vue({
+    el: "#app",
+    data: {
+        counter: 0
+    }
+});
+var app1 = new Vue({
+    el: "#app1",
+    data: {
+        name: "to myselfy"
+    },
+    methods: {
+        sayHello: function(event) {
+            alert("hello " + this.name);
+            if (event) {
+                alert(event.target.tagName)
+            }
+        }
+
+    }
+});
+var app2 = new Vue({
+    el: "#app2",
+    methods: {
+        say: function(message) {
+            alert(message);
+        },
+        warn: function(message, event) {
+            if (event) {
+                event.preventDefault();
+            }
+            alert(message)
+        }
+    }
+
+});
+</script>
+
+</html>
